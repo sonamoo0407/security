@@ -1,73 +1,41 @@
-
 <?php
-header('Content-Type: text/html; charset=UTF-8');
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+// POST 요청만 허용
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
-    exit('잘못된 요청입니다.');
+    exit("Method Not Allowed");
 }
 
-$outcome = $_POST['outcome'] ?? '';
+// 입력값 확인
+$username = $_POST["username"] ?? "";
+$password = $_POST["password"] ?? "";
 
-if ($outcome === 'success') {
-    $title = 'Login Successful!';
-    $color = 'green';
-    $message = '로그인 성공';
-} elseif ($outcome === 'fail') {
-    $title = 'Login Failed!';
-    $color = 'red';
-    $message = '로그인 실패';
-} else {
-    http_response_code(400);
-    $title = 'Invalid Request';
-    $color = 'gray';
-    $message = '유효하지 않은 요청입니다.';
-}
+// 실습용 계정
+$demoUsername = "user";
+$demoPasswordHash = password_hash("1234", PASSWORD_DEFAULT);
+
+// 서버 측 인증
+$loginSuccess =
+    ($username === $demoUsername) &&
+    password_verify($password, $demoPasswordHash);
+
 ?>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Result</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .result-box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 20px;
-        }
-    </style>
 </head>
-
 <body>
-    <div class="result-box">
-        <h2 style="color: <?= htmlspecialchars($color) ?>">
-            <?= htmlspecialchars($title) ?>
-        </h2>
+<?php if ($loginSuccess): ?>
+    <h2>Login Successful!</h2>
+    <p>인증에 성공했습니다.</p>
+<?php else: ?>
+    <h2>Login Failed!</h2>
+    <p>아이디 또는 비밀번호가 올바르지 않습니다.</p>
+<?php endif; ?>
 
-        <p><?= htmlspecialchars($message) ?></p>
-
-        <a href="index.php">Back to Login</a>
-    </div>
+<a href="index.php">Back to Login</a>
 </body>
 </html>

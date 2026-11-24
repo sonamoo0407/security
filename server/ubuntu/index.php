@@ -45,52 +45,13 @@
 <div class="login-box">
     <h2>Network Lab Login</h2>
 
-    <form id="loginForm">
-        <input type="text" id="username"
-               placeholder="Username" required>
+    <form method="post" action="auth.php">
+        <input type="text" name="username" placeholder="Username">
 
-        <input type="password" id="password"
-               placeholder="Password" required>
+        <input type="password" name="password" placeholder="Password">
 
         <button type="submit">Login</button>
     </form>
 </div>
-
-<script>
-    //가상 데이터
-    const demoUser = {
-        username: "labuser",
-        password: "lab1234"
-    };
-
-    document.getElementById("loginForm")
-        .addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        const outcome =
-            username === demoUser.username &&
-            password === demoUser.password
-            ? "success"
-            : "fail";
-
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = "auth.php";
-
-        const field = document.createElement("input");
-        field.type = "hidden";
-        field.name = "outcome";
-        field.value = outcome;
-
-        form.appendChild(field);
-        document.body.appendChild(form);
-        form.submit();
-    });
-</script>
-
 </body>
 </html>
